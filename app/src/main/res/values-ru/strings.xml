@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Landly</string>
+    <string name="title_search">Поиск</string>
+    <string name="title_random">Случайно</string>
+    <string name="title_favourite">Избранные</string>
+</resources>
