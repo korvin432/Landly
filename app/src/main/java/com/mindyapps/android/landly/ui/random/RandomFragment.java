@@ -1,6 +1,7 @@
 package com.mindyapps.android.landly.ui.random;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +12,48 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import com.mindyapps.android.landly.R;
+import com.mindyapps.android.landly.models.Landmark;
+import com.mindyapps.android.landly.viewmodels.ViewModelProviderFactory;
 
-public class RandomFragment extends Fragment {
+import java.util.List;
 
-    private RandomViewModel homeViewModel;
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
+
+public class RandomFragment extends DaggerFragment {
+
+    private static final String TAG = "RandomFragment";
+
+    private RandomViewModel randomViewModel;
+
+    @Inject
+    ViewModelProviderFactory providerFactory;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(RandomViewModel.class);
+        randomViewModel =
+                ViewModelProviders.of(this, providerFactory).get(RandomViewModel.class);
+        randomViewModel.init();
+
         View root = inflater.inflate(R.layout.fragment_random, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(this, new Observer<String>() {
+        randomViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
         });
+
+        randomViewModel.getLandmarkRepository().observe(this, new Observer<Landmark>() {
+            @Override
+            public void onChanged(Landmark landmark) {
+                String name = landmark.getName();
+                String imageUrl = landmark.getImageUrl();
+                Log.d(TAG, "onCreateView: " + name + ": " + imageUrl);
+            }
+        });
+
         return root;
     }
 }

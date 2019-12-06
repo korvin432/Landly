@@ -6,6 +6,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.mindyapps.android.landly.R;
+import com.mindyapps.android.landly.network.PixabayApi;
+import com.mindyapps.android.landly.repositories.LandmarkRepository;
 import com.mindyapps.android.landly.util.Constants;
 import javax.inject.Singleton;
 import dagger.Module;
