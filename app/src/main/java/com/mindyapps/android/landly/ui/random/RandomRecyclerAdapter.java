@@ -54,11 +54,10 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
     @Override
     public void onBindViewHolder(@NonNull final RandomViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: " + landmarks.get(position).getName());
-
         Landmark landmark = landmarks.get(position);
-        holder.title.setText(landmark.getName());
 
         if (requestManager != null && landmark.getHitList().size() != 0) {
+            holder.title.setText(landmark.getName());
             try {
                 requestManager
                         .load(landmark.getImageUrl())
@@ -66,6 +65,7 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
                         .into(new CustomTarget<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                holder.landMarkImage.setImageDrawable(null);
                                 holder.progressBar.setVisibility(View.GONE);
                                 holder.landMarkImage.setImageDrawable(resource);
                             }
@@ -78,14 +78,28 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
             } catch (Exception ex){
                 Log.d(TAG, "onBindViewHolder: " + ex.getMessage());
             }
+        } else {
+            return;
         }
 
         //((RandomViewHolder) holder).bind(landmarks.get(position));
     }
 
     @Override
+    public void onViewRecycled(@NonNull RandomViewHolder holder) {
+        requestManager.clear(holder.landMarkImage);
+        super.onViewRecycled(holder);
+    }
+
+    @Override
     public int getItemCount() {
         return landmarks.size();
+    }
+
+    public void clear() {
+        int size = landmarks.size();
+        landmarks.clear();
+        notifyItemRangeRemoved(0, size);
     }
 
     public void setLandmarks(List<Landmark> landmarks) {

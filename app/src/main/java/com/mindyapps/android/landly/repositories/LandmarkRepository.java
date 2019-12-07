@@ -41,7 +41,7 @@ public class LandmarkRepository {
 
     public MutableLiveData<Landmark> getLandmarksByName(String key, String name){
         final MutableLiveData<Landmark> landmarksData = new MutableLiveData<>();
-        pixabayApi.getLandmark(key, name).enqueue(new Callback<Landmark>() {
+        pixabayApi.getLandmark(key, name, 3).enqueue(new Callback<Landmark>() {
             @Override
             public void onResponse(Call<Landmark> call,
                                    Response<Landmark> response) {
@@ -64,7 +64,7 @@ public class LandmarkRepository {
 
         for (int i = 0; i < 10; i++) {
             final String landMark = getRandomMark();
-            pixabayApi.getLandmark(key, landMark).enqueue(new Callback<Landmark>() {
+            pixabayApi.getLandmark(key, landMark, 3).enqueue(new Callback<Landmark>() {
                 @Override
                 public void onResponse(Call<Landmark> call, Response<Landmark> response) {
                     if (response.isSuccessful()) {

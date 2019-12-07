@@ -10,5 +10,6 @@ public interface PixabayApi {
 
     @GET(".")
     Call<Landmark> getLandmark(@Query("key") String apiKey,
-                               @Query("q") String placeName);
+                               @Query("q") String placeName,
+                               @Query("per_page") int perPage);
 }
