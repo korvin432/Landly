@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mindyapps.android.landly.R;
 import com.mindyapps.android.landly.models.Landmark;
 import com.mindyapps.android.landly.viewmodels.ViewModelProviderFactory;
@@ -18,42 +21,50 @@ import com.mindyapps.android.landly.viewmodels.ViewModelProviderFactory;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import dagger.android.support.DaggerFragment;
 
 public class RandomFragment extends DaggerFragment {
-
     private static final String TAG = "RandomFragment";
 
     private RandomViewModel randomViewModel;
+    private RecyclerView recyclerView;
+
+    @Inject
+    RandomRecyclerAdapter adapter;
 
     @Inject
     ViewModelProviderFactory providerFactory;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
-        randomViewModel =
-                ViewModelProviders.of(this, providerFactory).get(RandomViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_random, container, false);
+        randomViewModel = ViewModelProviders.of(this, providerFactory).get(RandomViewModel.class);
         randomViewModel.init();
 
-        View root = inflater.inflate(R.layout.fragment_random, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        randomViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        recyclerView = root.findViewById(R.id.random_recycler);
+        initRecyclerView();
 
-        randomViewModel.getLandmarkRepository().observe(this, new Observer<Landmark>() {
+
+        randomViewModel.getLandmarkRepository().observe(this, new Observer<List<Landmark>>() {
             @Override
-            public void onChanged(Landmark landmark) {
-                String name = landmark.getName();
-                String imageUrl = landmark.getImageUrl();
-                Log.d(TAG, "onCreateView: " + name + ": " + imageUrl);
+            public void onChanged(List<Landmark> landmarks) {
+                if (landmarks != null && landmarks.size() >= 10) {
+                    adapter.setLandmarks(landmarks);
+                }
             }
         });
 
         return root;
+    }
+
+    private void initRecyclerView(){
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }

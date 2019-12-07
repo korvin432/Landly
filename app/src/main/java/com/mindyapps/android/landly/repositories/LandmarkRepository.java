@@ -11,8 +11,10 @@ import com.mindyapps.android.landly.util.Constants;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -56,24 +58,34 @@ public class LandmarkRepository {
         return landmarksData;
     }
 
-    public MutableLiveData<Landmark> getRandomLandmarks(String key){
-        final MutableLiveData<Landmark> landmarksData = new MutableLiveData<>();
-        final String landMark = getRandomMark();
-        pixabayApi.getLandmark(key, landMark).enqueue(new Callback<Landmark>() {
-            @Override
-            public void onResponse(Call<Landmark> call,
-                                   Response<Landmark> response) {
-                if (response.isSuccessful()){
-                    response.body().setName(landMark);
-                    landmarksData.setValue(response.body());
-                }
-            }
+    public MutableLiveData<List<Landmark>> getRandomLandmarks(String key){
+        final MutableLiveData<List<Landmark>> landmarksData = new MutableLiveData<>();
+        final List<Landmark> landmarks = new ArrayList<>();
 
-            @Override
-            public void onFailure(Call<Landmark> call, Throwable t) {
-                landmarksData.setValue(null);
-            }
-        });
+        for (int i = 0; i < 10; i++) {
+            final String landMark = getRandomMark();
+            pixabayApi.getLandmark(key, landMark).enqueue(new Callback<Landmark>() {
+                @Override
+                public void onResponse(Call<Landmark> call, Response<Landmark> response) {
+                    if (response.isSuccessful()) {
+                        response.body().setName(landMark);
+                        landmarks.add(response.body());
+
+                        Set<Landmark> set = new HashSet<>(landmarks);
+                        landmarks.clear();
+                        landmarks.addAll(set);
+
+                        landmarksData.setValue(landmarks);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Landmark> call, Throwable t) {
+                    landmarksData.setValue(null);
+                }
+            });
+        }
+
         return landmarksData;
     }
 

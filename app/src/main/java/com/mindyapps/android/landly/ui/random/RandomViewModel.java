@@ -8,12 +8,13 @@ import com.mindyapps.android.landly.models.Landmark;
 import com.mindyapps.android.landly.repositories.LandmarkRepository;
 import com.mindyapps.android.landly.util.Constants;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 public class RandomViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
-    private MutableLiveData<Landmark> landmarkMutableLiveData;
+    private MutableLiveData<List<Landmark>> landmarkMutableLiveData;
     @Inject
     LandmarkRepository landmarkRepository;
 
@@ -26,15 +27,10 @@ public class RandomViewModel extends ViewModel {
 
     @Inject
     public RandomViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is random fragment");
     }
 
-    public LiveData<Landmark> getLandmarkRepository() {
+    public LiveData<List<Landmark>> getLandmarkRepository() {
         return landmarkMutableLiveData;
     }
 
-    public LiveData<String> getText() {
-        return mText;
-    }
 }

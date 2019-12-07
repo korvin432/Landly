@@ -2,9 +2,12 @@ package com.mindyapps.android.landly.di;
 
 import android.app.Application;
 
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+import com.mindyapps.android.landly.MainActivity;
 import com.mindyapps.android.landly.R;
 import com.mindyapps.android.landly.network.PixabayApi;
 import com.mindyapps.android.landly.repositories.LandmarkRepository;
