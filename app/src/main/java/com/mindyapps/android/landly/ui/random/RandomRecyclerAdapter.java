@@ -53,14 +53,13 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
 
     @Override
     public void onBindViewHolder(@NonNull final RandomViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: " + landmarks.get(position).getName());
         Landmark landmark = landmarks.get(position);
 
         if (requestManager != null && landmark.getHitList().size() != 0) {
             holder.title.setText(landmark.getName());
             try {
                 requestManager
-                        .load(landmark.getImageUrl())
+                        .load(landmark.getImageUrl(0))
                         .fitCenter()
                         .into(new CustomTarget<Drawable>() {
                             @Override
@@ -123,7 +122,7 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
         public void bind(Landmark landmark) {
             title.setText(landmark.getName());
             requestManager
-                    .load(landmark.getImageUrl())
+                    .load(landmark.getImageUrl(0))
                     .into(landMarkImage);
         }
     }

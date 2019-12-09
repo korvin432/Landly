@@ -45,7 +45,6 @@ public class RandomFragment extends DaggerFragment {
         recyclerView = root.findViewById(R.id.random_recycler);
         initRecyclerView();
 
-
         adapter.clear();
         randomViewModel.getLandmarkRepository().observe(this, new Observer<List<Landmark>>() {
             @Override
@@ -63,10 +62,5 @@ public class RandomFragment extends DaggerFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 }

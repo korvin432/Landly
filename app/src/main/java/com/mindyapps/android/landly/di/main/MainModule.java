@@ -14,6 +14,7 @@ import com.mindyapps.android.landly.R;
 import com.mindyapps.android.landly.network.PixabayApi;
 import com.mindyapps.android.landly.repositories.LandmarkRepository;
 import com.mindyapps.android.landly.ui.random.RandomRecyclerAdapter;
+import com.mindyapps.android.landly.ui.search.SearchRecyclerAdapter;
 
 import javax.inject.Singleton;
 
@@ -26,8 +27,14 @@ public class MainModule {
 
     @MainScope
     @Provides
-    static RandomRecyclerAdapter provideAdapter(RequestManager requestManager){
+    static RandomRecyclerAdapter provideRandomAdapter(RequestManager requestManager){
         return new RandomRecyclerAdapter(requestManager);
+    }
+
+    @MainScope
+    @Provides
+    static SearchRecyclerAdapter provideSearchAdapter(RequestManager requestManager){
+        return new SearchRecyclerAdapter(requestManager);
     }
 
     @MainScope

@@ -41,10 +41,10 @@ public class LandmarkRepository {
 
     public MutableLiveData<Landmark> getLandmarksByName(String key, String name){
         final MutableLiveData<Landmark> landmarksData = new MutableLiveData<>();
-        pixabayApi.getLandmark(key, name, 3).enqueue(new Callback<Landmark>() {
+
+        pixabayApi.getLandmark(key, name, 50).enqueue(new Callback<Landmark>() {
             @Override
-            public void onResponse(Call<Landmark> call,
-                                   Response<Landmark> response) {
+            public void onResponse(Call<Landmark> call, Response<Landmark> response) {
                 if (response.isSuccessful()){
                     landmarksData.setValue(response.body());
                 }
