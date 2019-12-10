@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -30,11 +31,11 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 
-public class SearchFragment extends DaggerFragment implements View.OnKeyListener {
+public class SearchFragment extends DaggerFragment {
 
     private static final String TAG = "SearchFragment";
     private SearchViewModel searchViewModel;
-    private EditText etSearch;
+    private SearchView searchView;
     private RecyclerView recyclerView;
 
     @Inject
@@ -45,18 +46,40 @@ public class SearchFragment extends DaggerFragment implements View.OnKeyListener
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        searchViewModel = ViewModelProviders.of(this, providerFactory)
-                .get(SearchViewModel.class);
-        searchViewModel.init();
         View root = inflater.inflate(R.layout.fragment_search, container, false);
+        searchViewModel = ViewModelProviders.of(this, providerFactory).get(SearchViewModel.class);
+        searchViewModel.init();
 
+        searchView = root.findViewById(R.id.et_search);
         recyclerView = root.findViewById(R.id.search_recycler);
-        initRecyclerView();
 
-        etSearch = root.findViewById(R.id.et_search);
-        etSearch.setOnKeyListener(this);
+        initRecyclerView();
+        subscribeObservers();
+        initSearchView();
+
+        Log.d(TAG, "onCreateView: ");
 
         return root;
+    }
+
+    private void subscribeObservers() {
+        searchViewModel.getData().observe(getViewLifecycleOwner(), new Observer<Landmark>() {
+            @Override
+            public void onChanged(Landmark landmark) {
+                if (landmark != null) {
+                    adapter.setLandmarks(landmark);
+                } else {
+                    Log.d(TAG, "landmark is null");
+                }
+            }
+        });
+
+        searchViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                searchView.setQuery(s, true);
+            }
+        });
     }
 
     private void initRecyclerView() {
@@ -66,18 +89,20 @@ public class SearchFragment extends DaggerFragment implements View.OnKeyListener
         recyclerView.setHasFixedSize(true);
     }
 
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-            searchViewModel.getData(etSearch.getText().toString()).observe(this, new Observer<Landmark>() {
-                @Override
-                public void onChanged(Landmark landmark) {
-                    adapter.setLandmarks(landmark);
-                    Log.d(TAG, "getItemCount: " + adapter.getItemCount());
-                }
-            });
-            return true;
-        }
-        return false;
+    private void initSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                searchViewModel.searchData(s);
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
     }
+
 }

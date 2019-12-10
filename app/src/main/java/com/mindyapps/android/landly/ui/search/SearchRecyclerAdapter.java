@@ -98,9 +98,15 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         this.landmark = landmark;
         imageUrls.clear();
         for (int i = 0; i < landmark.getHitList().size(); i++){
-            imageUrls.add(landmark.getImageUrl(i));
+            imageUrls.add(landmark.getPreviewUrl(i));
         }
         notifyDataSetChanged();
+    }
+
+    public void clear() {
+        int size = imageUrls.size();
+        imageUrls.clear();
+        notifyItemRangeRemoved(0, size);
     }
 
     public class SearchViewHolder extends RecyclerView.ViewHolder {

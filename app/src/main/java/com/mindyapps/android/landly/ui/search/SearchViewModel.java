@@ -1,5 +1,7 @@
 package com.mindyapps.android.landly.ui.search;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -14,23 +16,39 @@ import javax.inject.Inject;
 
 public class SearchViewModel extends ViewModel {
 
-    private MutableLiveData<Landmark> landmarkMutableLiveData;
+    private static final String TAG = "SearchViewModel";
+    private LiveData<Landmark> landmarkMutableLiveData;
+    private MutableLiveData<String> etText;
     @Inject
     LandmarkRepository landmarkRepository;
+
 
     public void init(){
         if (landmarkMutableLiveData != null){
             return;
         }
+        etText = new MutableLiveData<>();
+        landmarkMutableLiveData = new MutableLiveData<>();
+        //getData(etText.getValue());
     }
 
     @Inject
     public SearchViewModel() {
     }
 
-    public LiveData<Landmark> getData(String query) {
-        landmarkMutableLiveData = landmarkRepository.getLandmarksByName(Constants.PIXABAY_API_KEY, query);
-
+    public LiveData<Landmark> getData() {
+        landmarkMutableLiveData = landmarkRepository.getLandmark();
         return landmarkMutableLiveData;
     }
+
+    public void searchData(String query) {
+        landmarkRepository.getLandmarksByName(Constants.PIXABAY_API_KEY, query);
+        Log.d(TAG, "searchData: " + query);
+        getData();
+    }
+
+    public LiveData<String> getText() {
+        return etText;
+    }
+
 }

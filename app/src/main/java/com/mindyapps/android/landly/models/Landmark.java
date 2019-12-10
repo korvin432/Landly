@@ -23,6 +23,11 @@ public class Landmark {
         return hitList.get(position).getImageUrl();
     }
 
+    public String getPreviewUrl(int position) {
+        return hitList.get(position).getPreviewUrl();
+    }
+
+
     public void setName(String name) {
         this.name = name;
     }
@@ -40,11 +45,18 @@ class Hit{
     @SerializedName("largeImageURL")
     private String imageUrl;
 
+    @SerializedName("previewURL")
+    private String previewUrl;
+
     public Hit(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getPreviewUrl() {
+        return previewUrl;
     }
 }

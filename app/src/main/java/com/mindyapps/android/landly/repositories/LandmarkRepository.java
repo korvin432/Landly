@@ -2,6 +2,7 @@ package com.mindyapps.android.landly.repositories;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.mindyapps.android.landly.models.Landmark;
@@ -30,8 +31,11 @@ public class LandmarkRepository {
     private static final String TAG = "LandmarkRepository";
 
     private List<String> randomMarks = new ArrayList<>();
+    private Landmark landMark;
     PixabayApi pixabayApi;
     Retrofit retrofit;
+
+    private MutableLiveData<Landmark> landmarkMutableLiveData = new MutableLiveData<>();
 
     @Inject
     public LandmarkRepository(Retrofit retrofit, PixabayApi pixabayApi){
@@ -39,23 +43,29 @@ public class LandmarkRepository {
         this.pixabayApi = pixabayApi;
     }
 
-    public MutableLiveData<Landmark> getLandmarksByName(String key, String name){
-        final MutableLiveData<Landmark> landmarksData = new MutableLiveData<>();
+    public LiveData<Landmark> getLandmark(){
+        return landmarkMutableLiveData;
+    }
 
+    public LiveData<Landmark> getLandmarksByName(String key, String name){
         pixabayApi.getLandmark(key, name, 50).enqueue(new Callback<Landmark>() {
             @Override
             public void onResponse(Call<Landmark> call, Response<Landmark> response) {
                 if (response.isSuccessful()){
-                    landmarksData.setValue(response.body());
+                    landmarkMutableLiveData.postValue(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<Landmark> call, Throwable t) {
-                landmarksData.setValue(null);
+                landmarkMutableLiveData.postValue(null);
             }
         });
-        return landmarksData;
+        return landmarkMutableLiveData;
+    }
+
+    public Landmark getLandMarks(){
+        return landMark;
     }
 
     public MutableLiveData<List<Landmark>> getRandomLandmarks(String key){
