@@ -36,7 +36,7 @@ public class AppModule {
     @Provides
     static RequestOptions provideRequestOptions(){
         return RequestOptions
-                .placeholderOf(R.drawable.white_background)
+                .placeholderOf(R.drawable.loading_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(R.drawable.white_background);
     }

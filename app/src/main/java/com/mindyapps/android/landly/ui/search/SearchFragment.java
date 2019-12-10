@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.mindyapps.android.landly.R;
 import com.mindyapps.android.landly.models.Landmark;
 import com.mindyapps.android.landly.ui.random.RandomRecyclerAdapter;
@@ -57,8 +58,6 @@ public class SearchFragment extends DaggerFragment {
         subscribeObservers();
         initSearchView();
 
-        Log.d(TAG, "onCreateView: ");
-
         return root;
     }
 
@@ -67,9 +66,8 @@ public class SearchFragment extends DaggerFragment {
             @Override
             public void onChanged(Landmark landmark) {
                 if (landmark != null) {
+                    adapter.clear();
                     adapter.setLandmarks(landmark);
-                } else {
-                    Log.d(TAG, "landmark is null");
                 }
             }
         });
@@ -83,8 +81,9 @@ public class SearchFragment extends DaggerFragment {
     }
 
     private void initRecyclerView() {
-        recyclerView.setLayoutManager(new GridLayoutManager(
-                getContext(), 3));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(
+                4, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setItemAnimator(null);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
     }
@@ -105,4 +104,9 @@ public class SearchFragment extends DaggerFragment {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Glide.get(getContext()).clearMemory();
+    }
 }

@@ -48,22 +48,20 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
 
     @Override
     public void onBindViewHolder(final SearchViewHolder holder, int position) {
-        holder.landMarkImage.setImageResource(0);
+        holder.landMarkImage.setImageResource(R.drawable.loading_placeholder);
         if (requestManager != null && landmark.getHitList().size() != 0) {
             try {
                 requestManager
                         .load(imageUrls.get(position))
                         .fitCenter()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .override(500,500)
                         .thumbnail(0.5f)
+                        .skipMemoryCache(true)
+                        .override(500,500)
+                        .placeholder(R.drawable.loading_placeholder)
                         .into(new CustomTarget<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                holder.landMarkImage.setImageResource(0);
-                                holder.progressBar.setVisibility(View.GONE);
                                 holder.landMarkImage.setImageDrawable(resource);
-                                holder.landMarkImage.setTag(resource);
                             }
 
                             @Override
@@ -77,6 +75,12 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         } else {
             return;
         }
+    }
+
+    public void clear() {
+        int size = imageUrls.size();
+        imageUrls.clear();
+        notifyItemRangeRemoved(0, size);
     }
 
     @Override
@@ -103,21 +107,13 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         notifyDataSetChanged();
     }
 
-    public void clear() {
-        int size = imageUrls.size();
-        imageUrls.clear();
-        notifyItemRangeRemoved(0, size);
-    }
-
     public class SearchViewHolder extends RecyclerView.ViewHolder {
         public ImageView landMarkImage;
-        public ProgressBar progressBar;
 
         public SearchViewHolder(@NonNull View itemView) {
             super(itemView);
             landMarkImage = itemView.findViewById(R.id.search_image);
             landMarkImage.layout(0,0,0,0);
-            progressBar = itemView.findViewById(R.id.progress);
         }
     }
 }

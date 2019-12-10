@@ -59,13 +59,11 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
             holder.title.setText(landmark.getName());
             try {
                 requestManager
-                        .load(landmark.getImageUrl(0))
+                        .load(landmark.getImageUrl())
                         .fitCenter()
                         .into(new CustomTarget<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                holder.landMarkImage.setImageDrawable(null);
-                                holder.progressBar.setVisibility(View.GONE);
                                 holder.landMarkImage.setImageDrawable(resource);
                             }
 
@@ -80,8 +78,6 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
         } else {
             return;
         }
-
-        //((RandomViewHolder) holder).bind(landmarks.get(position));
     }
 
     @Override
@@ -109,21 +105,12 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
     public class RandomViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public ImageView landMarkImage;
-        public ProgressBar progressBar;
 
         public RandomViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.tv_name);
             landMarkImage = itemView.findViewById(R.id.landmark_image);
             landMarkImage.layout(0,0,0,0);
-            progressBar = itemView.findViewById(R.id.progress);
-        }
-
-        public void bind(Landmark landmark) {
-            title.setText(landmark.getName());
-            requestManager
-                    .load(landmark.getImageUrl(0))
-                    .into(landMarkImage);
         }
     }
 }

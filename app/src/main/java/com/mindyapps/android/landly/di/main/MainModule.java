@@ -46,8 +46,8 @@ public class MainModule {
 
     @MainScope
     @Provides
-    static LandmarkRepository provideLandMarksRepo(Retrofit retrofit, PixabayApi pixabayApi) {
-        return new LandmarkRepository(retrofit, pixabayApi);
+    static LandmarkRepository provideLandMarksRepo(PixabayApi pixabayApi) {
+        return new LandmarkRepository(pixabayApi);
     }
 
 }

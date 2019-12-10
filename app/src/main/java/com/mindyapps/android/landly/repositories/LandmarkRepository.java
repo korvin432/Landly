@@ -31,15 +31,12 @@ public class LandmarkRepository {
     private static final String TAG = "LandmarkRepository";
 
     private List<String> randomMarks = new ArrayList<>();
-    private Landmark landMark;
-    PixabayApi pixabayApi;
-    Retrofit retrofit;
+    private PixabayApi pixabayApi;
 
     private MutableLiveData<Landmark> landmarkMutableLiveData = new MutableLiveData<>();
 
     @Inject
-    public LandmarkRepository(Retrofit retrofit, PixabayApi pixabayApi){
-        this.retrofit = retrofit;
+    public LandmarkRepository(PixabayApi pixabayApi){
         this.pixabayApi = pixabayApi;
     }
 
@@ -48,7 +45,7 @@ public class LandmarkRepository {
     }
 
     public LiveData<Landmark> getLandmarksByName(String key, String name){
-        pixabayApi.getLandmark(key, name, 50).enqueue(new Callback<Landmark>() {
+        pixabayApi.getLandmark(key, name, 64).enqueue(new Callback<Landmark>() {
             @Override
             public void onResponse(Call<Landmark> call, Response<Landmark> response) {
                 if (response.isSuccessful()){
@@ -64,10 +61,6 @@ public class LandmarkRepository {
         return landmarkMutableLiveData;
     }
 
-    public Landmark getLandMarks(){
-        return landMark;
-    }
-
     public MutableLiveData<List<Landmark>> getRandomLandmarks(String key){
         final MutableLiveData<List<Landmark>> landmarksData = new MutableLiveData<>();
         final List<Landmark> landmarks = new ArrayList<>();
@@ -81,6 +74,7 @@ public class LandmarkRepository {
                         response.body().setName(landMark);
                         landmarks.add(response.body());
 
+                        // TODO: 10.12.2019 change duplicate search method
                         Set<Landmark> set = new HashSet<>(landmarks);
                         landmarks.clear();
                         landmarks.addAll(set);

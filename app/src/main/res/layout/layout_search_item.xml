@@ -5,16 +5,11 @@
     android:orientation="horizontal"
     android:padding="1dp">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:visibility="visible" />
-
     <ImageView
         android:id="@+id/search_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/loading_placeholder"
         android:adjustViewBounds="true"
         android:scaleType="fitXY" />
 

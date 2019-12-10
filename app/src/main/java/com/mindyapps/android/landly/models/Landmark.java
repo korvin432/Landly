@@ -19,8 +19,8 @@ public class Landmark {
         this.imageUrl = imageUrl;
     }
 
-    public String getImageUrl(int position) {
-        return hitList.get(position).getImageUrl();
+    public String getImageUrl() {
+        return hitList.get(0).getImageUrl();
     }
 
     public String getPreviewUrl(int position) {
