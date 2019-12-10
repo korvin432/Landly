@@ -1,5 +1,6 @@
 package com.mindyapps.android.landly.ui.random;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,29 +55,37 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
     @Override
     public void onBindViewHolder(@NonNull final RandomViewHolder holder, int position) {
         Landmark landmark = landmarks.get(position);
+        if (landmark != null && landmark.getImageUrl() != null) {
 
-        if (requestManager != null && landmark.getHitList().size() != 0) {
-            holder.title.setText(landmark.getName());
-            try {
-                requestManager
-                        .load(landmark.getImageUrl())
-                        .fitCenter()
-                        .into(new CustomTarget<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                holder.landMarkImage.setImageDrawable(resource);
-                            }
+            holder.landMarkImage.setImageResource(R.drawable.loading_placeholder);
+            if (requestManager != null && landmark.getHitList().size() != 0) {
+                holder.title.setText(landmark.getName());
+                try {
+                    requestManager
+                            .load(landmark.getImageUrl())
+                            .fitCenter()
+                            .error(R.color.colorPrimaryDark)
+                            .into(new CustomTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    holder.landMarkImage.setImageDrawable(resource);
+                                }
 
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                            }
-                        });
-            } catch (Exception ex){
-                Log.d(TAG, "onBindViewHolder: " + ex.getMessage());
+                                }
+                            });
+                } catch (Exception ex) {
+                    Log.d(TAG, "onBindViewHolder: " + ex.getMessage());
+                }
+            } else {
+                return;
             }
         } else {
-            return;
+            landmarks.remove(position);
+            // TODO: 11.12.2019 FIX (сделать проверку на наличие урла в репозитории) 
+            notifyItemRemoved(position);
         }
     }
 

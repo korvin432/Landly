@@ -36,19 +36,19 @@ public class LandmarkRepository {
     private MutableLiveData<Landmark> landmarkMutableLiveData = new MutableLiveData<>();
 
     @Inject
-    public LandmarkRepository(PixabayApi pixabayApi){
+    public LandmarkRepository(PixabayApi pixabayApi) {
         this.pixabayApi = pixabayApi;
     }
 
-    public LiveData<Landmark> getLandmark(){
+    public LiveData<Landmark> getLandmark() {
         return landmarkMutableLiveData;
     }
 
-    public LiveData<Landmark> getLandmarksByName(String key, String name){
+    public LiveData<Landmark> getLandmarksByName(String key, String name) {
         pixabayApi.getLandmark(key, name, 64).enqueue(new Callback<Landmark>() {
             @Override
             public void onResponse(Call<Landmark> call, Response<Landmark> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     landmarkMutableLiveData.postValue(response.body());
                 }
             }
@@ -61,25 +61,24 @@ public class LandmarkRepository {
         return landmarkMutableLiveData;
     }
 
-    public MutableLiveData<List<Landmark>> getRandomLandmarks(String key){
+    public MutableLiveData<List<Landmark>> getRandomLandmarks(String key) {
         final MutableLiveData<List<Landmark>> landmarksData = new MutableLiveData<>();
         final List<Landmark> landmarks = new ArrayList<>();
+        final List<String> usedMarks = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             final String landMark = getRandomMark();
             pixabayApi.getLandmark(key, landMark, 3).enqueue(new Callback<Landmark>() {
                 @Override
                 public void onResponse(Call<Landmark> call, Response<Landmark> response) {
-                    if (response.isSuccessful()) {
-                        response.body().setName(landMark);
-                        landmarks.add(response.body());
+                    if (response.isSuccessful() && response.body().getHitList() != null) {
+                        if (!usedMarks.contains(landMark)) {
+                            response.body().setName(landMark);
+                            landmarks.add(response.body());
 
-                        // TODO: 10.12.2019 change duplicate search method
-                        Set<Landmark> set = new HashSet<>(landmarks);
-                        landmarks.clear();
-                        landmarks.addAll(set);
-
-                        landmarksData.setValue(landmarks);
+                            landmarksData.setValue(landmarks);
+                            usedMarks.add(landMark);
+                        }
                     }
                 }
 

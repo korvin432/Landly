@@ -20,7 +20,10 @@ public class Landmark {
     }
 
     public String getImageUrl() {
-        return hitList.get(0).getImageUrl();
+        if (hitList != null && !hitList.isEmpty()) {
+            return hitList.get(0).getImageUrl();
+        }
+        return null;
     }
 
     public String getPreviewUrl(int position) {
@@ -42,7 +45,7 @@ public class Landmark {
 }
 
 class Hit{
-    @SerializedName("largeImageURL")
+    @SerializedName("webformatURL")
     private String imageUrl;
 
     @SerializedName("previewURL")

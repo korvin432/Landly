@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.mindyapps.android.landly.R;
 import com.mindyapps.android.landly.models.Landmark;
@@ -59,7 +60,7 @@ public class RandomFragment extends DaggerFragment {
     }
 
     private void initRecyclerView(){
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
     }
