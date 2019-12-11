@@ -43,7 +43,6 @@ public class SearchViewModel extends ViewModel {
 
     public void searchData(String query) {
         landmarkRepository.getLandmarksByName(Constants.PIXABAY_API_KEY, query);
-        Log.d(TAG, "searchData: " + query);
         getData();
     }
 

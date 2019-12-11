@@ -26,6 +26,22 @@ public class Landmark {
         return null;
     }
 
+    public int getViews() {
+        return hitList.get(0).getViewsCount();
+    }
+
+    public int getLikes() {
+        return hitList.get(0).getLikesCount();
+    }
+
+    public String getUserName() {
+        return hitList.get(0).getUserName();
+    }
+
+    public String getUserImage() {
+        return hitList.get(0).getUserImage();
+    }
+
     public String getPreviewUrl(int position) {
         return hitList.get(position).getPreviewUrl();
     }
@@ -50,6 +66,18 @@ class Hit{
     @SerializedName("previewURL")
     private String previewUrl;
 
+    @SerializedName("views")
+    private int viewsCount;
+
+    @SerializedName("likes")
+    private int likesCount;
+
+    @SerializedName("user")
+    private String userName;
+
+    @SerializedName("userImageURL")
+    private String userImage;
+
     public Hit(String imageUrl) {
         this.imageUrl = imageUrl;
     }
@@ -60,5 +88,21 @@ class Hit{
 
     public String getPreviewUrl() {
         return previewUrl;
+    }
+
+    public int getViewsCount() {
+        return viewsCount;
+    }
+
+    public int getLikesCount() {
+        return likesCount;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserImage() {
+        return userImage;
     }
 }

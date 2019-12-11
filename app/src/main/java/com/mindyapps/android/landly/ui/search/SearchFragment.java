@@ -82,7 +82,7 @@ public class SearchFragment extends DaggerFragment {
 
     private void initRecyclerView() {
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(
-                4, StaggeredGridLayoutManager.VERTICAL));
+                3, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(null);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);

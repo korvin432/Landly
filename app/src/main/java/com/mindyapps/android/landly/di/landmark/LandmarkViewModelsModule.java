@@ -1,4 +1,4 @@
-package com.mindyapps.android.landly.di.main;
+package com.mindyapps.android.landly.di.landmark;
 
 import androidx.lifecycle.ViewModel;
 
@@ -12,16 +12,9 @@ import dagger.Module;
 import dagger.multibindings.IntoMap;
 
 @Module
-public abstract class MainViewModelsModule {
-
+public abstract class LandmarkViewModelsModule {
     @Binds
     @IntoMap
-    @ViewModelKey(RandomViewModel.class)
-    public abstract ViewModel bindRandomViewModel(RandomViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SearchViewModel.class)
-    public abstract ViewModel bindSearchViewModel(SearchViewModel viewModel);
-
+    @ViewModelKey(LandmarkViewModel.class)
+    public abstract ViewModel bindLandmarkViewModel(LandmarkViewModel viewModel);
 }

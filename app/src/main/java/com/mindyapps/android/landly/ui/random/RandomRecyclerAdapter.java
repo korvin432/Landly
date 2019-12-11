@@ -1,32 +1,22 @@
 package com.mindyapps.android.landly.ui.random;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.target.ViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mindyapps.android.landly.R;
-import com.mindyapps.android.landly.di.main.MainScope;
 import com.mindyapps.android.landly.models.Landmark;
 
 import java.util.ArrayList;
@@ -40,6 +30,8 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
 
     RequestManager requestManager;
 
+    private OnLandmarkListener onLandmarkListener;
+
     @Inject
     public RandomRecyclerAdapter(RequestManager requestManager) {
         this.requestManager = requestManager;
@@ -49,7 +41,7 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
     @Override
     public RandomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_landmarks_list_item, parent, false);
-        return new RandomViewHolder(view);
+        return new RandomViewHolder(view, onLandmarkListener);
     }
 
     @Override
@@ -76,6 +68,8 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
 
                                 }
                             });
+
+                    ViewCompat.setTransitionName(holder.landMarkImage, landmark.getName());
                 } catch (Exception ex) {
                     Log.d(TAG, "onBindViewHolder: " + ex.getMessage());
                 }
@@ -83,6 +77,10 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
                 return;
             }
         }
+    }
+
+    public void setOnItemClickListener(OnLandmarkListener onItemClickListener){
+        this.onLandmarkListener = onItemClickListener;
     }
 
     @Override
@@ -107,15 +105,34 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
         notifyDataSetChanged();
     }
 
-    public class RandomViewHolder extends RecyclerView.ViewHolder {
+    public Landmark getSelectedLandmark(int position){
+        if(landmarks != null){
+            if(landmarks.size() > 0){
+                return landmarks.get(position);
+            }
+        }
+        return null;
+    }
+
+    public class RandomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title;
         public ImageView landMarkImage;
+        OnLandmarkListener onLandmarkListener;
 
-        public RandomViewHolder(@NonNull View itemView) {
+        public RandomViewHolder(@NonNull View itemView, OnLandmarkListener onLandmarkListener) {
             super(itemView);
+            this.onLandmarkListener = onLandmarkListener;
+
             title = itemView.findViewById(R.id.tv_name);
             landMarkImage = itemView.findViewById(R.id.landmark_image);
             landMarkImage.layout(0,0,0,0);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onLandmarkListener.onLandmarkClick(getAdapterPosition(), landMarkImage);
         }
     }
 }

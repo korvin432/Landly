@@ -18,4 +18,5 @@ public abstract class MainFragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract FavouriteFragment contributeFavouriteFragment();
+
 }

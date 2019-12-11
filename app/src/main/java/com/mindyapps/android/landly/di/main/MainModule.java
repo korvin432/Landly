@@ -13,17 +13,20 @@ import com.mindyapps.android.landly.MainActivity;
 import com.mindyapps.android.landly.R;
 import com.mindyapps.android.landly.network.PixabayApi;
 import com.mindyapps.android.landly.repositories.LandmarkRepository;
+import com.mindyapps.android.landly.ui.random.OnLandmarkListener;
+import com.mindyapps.android.landly.ui.random.RandomFragment;
 import com.mindyapps.android.landly.ui.random.RandomRecyclerAdapter;
 import com.mindyapps.android.landly.ui.search.SearchRecyclerAdapter;
 
 import javax.inject.Singleton;
 
+import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 
 @Module
-public class MainModule {
+public  class MainModule {
 
     @MainScope
     @Provides
