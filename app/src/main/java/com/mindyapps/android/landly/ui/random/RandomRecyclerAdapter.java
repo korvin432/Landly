@@ -82,10 +82,6 @@ public class RandomRecyclerAdapter extends RecyclerView.Adapter<RandomRecyclerAd
             } else {
                 return;
             }
-        } else {
-            landmarks.remove(position);
-            // TODO: 11.12.2019 FIX (сделать проверку на наличие урла в репозитории) 
-            notifyItemRemoved(position);
         }
     }
 

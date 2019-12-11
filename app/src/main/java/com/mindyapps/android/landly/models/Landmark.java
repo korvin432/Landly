@@ -30,7 +30,6 @@ public class Landmark {
         return hitList.get(position).getPreviewUrl();
     }
 
-
     public void setName(String name) {
         this.name = name;
     }

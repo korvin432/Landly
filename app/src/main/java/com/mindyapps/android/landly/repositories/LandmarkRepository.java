@@ -32,6 +32,7 @@ public class LandmarkRepository {
 
     private List<String> randomMarks = new ArrayList<>();
     private PixabayApi pixabayApi;
+    private int randomSize;
 
     private MutableLiveData<Landmark> landmarkMutableLiveData = new MutableLiveData<>();
 
@@ -62,22 +63,24 @@ public class LandmarkRepository {
     }
 
     public MutableLiveData<List<Landmark>> getRandomLandmarks(String key) {
+        setRandomLandMarksSize(0);
         final MutableLiveData<List<Landmark>> landmarksData = new MutableLiveData<>();
         final List<Landmark> landmarks = new ArrayList<>();
         final List<String> usedMarks = new ArrayList<>();
+        final List<String> randomLandmarks = getRandomMarks();
 
-        for (int i = 0; i < 10; i++) {
-            final String landMark = getRandomMark();
-            pixabayApi.getLandmark(key, landMark, 3).enqueue(new Callback<Landmark>() {
+        for (int i = 0; i<randomLandmarks.size(); i++) {
+            final int finalI = i;
+            pixabayApi.getLandmark(key, randomLandmarks.get(i), 3).enqueue(new Callback<Landmark>() {
                 @Override
                 public void onResponse(Call<Landmark> call, Response<Landmark> response) {
                     if (response.isSuccessful() && response.body().getHitList() != null) {
-                        if (!usedMarks.contains(landMark)) {
-                            response.body().setName(landMark);
+                        if (!usedMarks.contains(randomLandmarks.get(finalI)) && response.body().getImageUrl() != null) {
+                            response.body().setName(randomLandmarks.get(finalI));
                             landmarks.add(response.body());
 
                             landmarksData.setValue(landmarks);
-                            usedMarks.add(landMark);
+                            usedMarks.add(randomLandmarks.get(finalI));
                         }
                     }
                 }
@@ -87,14 +90,29 @@ public class LandmarkRepository {
                     landmarksData.setValue(null);
                 }
             });
+            if (landmarksData.getValue() != null) {
+                setRandomLandMarksSize(landmarksData.getValue().size());
+            }
         }
-
         return landmarksData;
     }
 
-    public String getRandomMark() {
+    public void setRandomLandMarksSize(int randomSize) {
+        this.randomSize = randomSize;
+    }
+
+    public int getRandomLandMarksSize(){
+        randomSize++;
+        return randomSize++;
+    }
+
+    public List<String> getRandomMarks() {
         Random rand = new Random();
+        List<String> randomLandmarks = new ArrayList<>();
         randomMarks = Arrays.asList(Constants.LANDMARKS.split("\\s*,\\s*"));
-        return randomMarks.get(rand.nextInt(randomMarks.size()));
+        for (int i = 0; i < 15; i++) {
+            randomLandmarks.add(randomMarks.get(rand.nextInt(randomMarks.size())));
+        }
+        return randomLandmarks;
     }
 }

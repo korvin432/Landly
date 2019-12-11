@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.mindyapps.android.landly.R;
 import com.mindyapps.android.landly.models.Landmark;
+import com.mindyapps.android.landly.repositories.LandmarkRepository;
 import com.mindyapps.android.landly.viewmodels.ViewModelProviderFactory;
 
 import java.util.List;
@@ -38,6 +39,9 @@ public class RandomFragment extends DaggerFragment {
     @Inject
     ViewModelProviderFactory providerFactory;
 
+    @Inject
+    LandmarkRepository landmarkRepository;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_random, container, false);
         randomViewModel = ViewModelProviders.of(this, providerFactory).get(RandomViewModel.class);
@@ -50,7 +54,7 @@ public class RandomFragment extends DaggerFragment {
         randomViewModel.getLandmarkRepository().observe(this, new Observer<List<Landmark>>() {
             @Override
             public void onChanged(List<Landmark> landmarks) {
-                if (landmarks != null && landmarks.size() >= 10) {
+                if (landmarks != null && landmarks.size() >= landmarkRepository.getRandomLandMarksSize()) {
                     adapter.setLandmarks(landmarks);
                 }
             }
