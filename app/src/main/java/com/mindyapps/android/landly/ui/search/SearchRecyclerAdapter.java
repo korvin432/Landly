@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
@@ -19,6 +20,7 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mindyapps.android.landly.R;
 import com.mindyapps.android.landly.models.Landmark;
+import com.mindyapps.android.landly.ui.random.OnLandmarkListener;
 import com.mindyapps.android.landly.ui.random.RandomRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
 
     RequestManager requestManager;
 
+    private OnLandmarkListener onLandmarkListener;
+
     @Inject
     public SearchRecyclerAdapter(RequestManager requestManager) {
         this.requestManager = requestManager;
@@ -43,7 +47,7 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
     @Override
     public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_search_item, parent, false);
-        return new SearchViewHolder(view);
+        return new SearchViewHolder(view, onLandmarkListener);
     }
 
     @Override
@@ -69,12 +73,17 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
 
                             }
                         });
+                ViewCompat.setTransitionName(holder.landMarkImage, landmark.getName());
             } catch (Exception ex){
                 Log.d(TAG, "onBindViewHolder: " + ex.getMessage());
             }
         } else {
             return;
         }
+    }
+
+    public void setOnItemClickListener(OnLandmarkListener onItemClickListener){
+        this.onLandmarkListener = onItemClickListener;
     }
 
     public void clear() {
@@ -107,13 +116,31 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter<SearchRecyclerAd
         notifyDataSetChanged();
     }
 
-    public class SearchViewHolder extends RecyclerView.ViewHolder {
-        public ImageView landMarkImage;
+    public Landmark getSelectedLandmark(){
+        if(landmark != null){
+            if(landmark.getHitList().size() > 0){
+                return landmark;
+            }
+        }
+        return null;
+    }
 
-        public SearchViewHolder(@NonNull View itemView) {
+    public class SearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public ImageView landMarkImage;
+        OnLandmarkListener onLandmarkListener;
+
+        public SearchViewHolder(@NonNull View itemView, OnLandmarkListener onLandmarkListener) {
             super(itemView);
+            this.onLandmarkListener = onLandmarkListener;
+
             landMarkImage = itemView.findViewById(R.id.search_image);
             landMarkImage.layout(0,0,0,0);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onLandmarkListener.onLandmarkClick(getAdapterPosition(), landMarkImage);
         }
     }
 }

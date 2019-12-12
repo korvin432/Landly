@@ -45,11 +45,12 @@ public class LandmarkRepository {
         return landmarkMutableLiveData;
     }
 
-    public LiveData<Landmark> getLandmarksByName(String key, String name) {
+    public LiveData<Landmark> getLandmarksByName(String key, final String name) {
         pixabayApi.getLandmark(key, name, 64).enqueue(new Callback<Landmark>() {
             @Override
             public void onResponse(Call<Landmark> call, Response<Landmark> response) {
                 if (response.isSuccessful()) {
+                    response.body().setName(name);
                     landmarkMutableLiveData.postValue(response.body());
                 }
             }
@@ -75,7 +76,7 @@ public class LandmarkRepository {
                 @Override
                 public void onResponse(Call<Landmark> call, Response<Landmark> response) {
                     if (response.isSuccessful() && response.body().getHitList() != null) {
-                        if (!usedMarks.contains(randomLandmarks.get(finalI)) && response.body().getImageUrl() != null) {
+                        if (!usedMarks.contains(randomLandmarks.get(finalI)) && response.body().getImageUrl(0) != null) {
                             response.body().setName(randomLandmarks.get(finalI));
                             landmarks.add(response.body());
 

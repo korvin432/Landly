@@ -19,27 +19,27 @@ public class Landmark {
         this.imageUrl = imageUrl;
     }
 
-    public String getImageUrl() {
+    public String getImageUrl(int i) {
         if (hitList != null && !hitList.isEmpty()) {
-            return hitList.get(0).getImageUrl();
+            return hitList.get(i).getImageUrl();
         }
         return null;
     }
 
-    public int getViews() {
-        return hitList.get(0).getViewsCount();
+    public int getViews(int i) {
+        return hitList.get(i).getViewsCount();
     }
 
-    public int getLikes() {
-        return hitList.get(0).getLikesCount();
+    public int getLikes(int i) {
+        return hitList.get(i).getLikesCount();
     }
 
-    public String getUserName() {
-        return hitList.get(0).getUserName();
+    public String getUserName(int i) {
+        return hitList.get(i).getUserName();
     }
 
-    public String getUserImage() {
-        return hitList.get(0).getUserImage();
+    public String getUserImage(int i) {
+        return hitList.get(i).getUserImage();
     }
 
     public String getPreviewUrl(int position) {

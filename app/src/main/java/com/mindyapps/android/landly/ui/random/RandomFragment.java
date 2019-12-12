@@ -87,14 +87,13 @@ public class RandomFragment extends DaggerFragment implements OnLandmarkListener
     public void onLandmarkClick(int position, ImageView sharedImageView) {
         Landmark landmark = adapter.getSelectedLandmark(position);
         Intent intent = new Intent(getActivity(), LandmarkActivity.class);
-        intent.putExtra(USERNAME_EXTRA, landmark.getUserName());
-        intent.putExtra(USER_IMAGE_EXTRA, landmark.getUserImage());
+        intent.putExtra(USERNAME_EXTRA, landmark.getUserName(0));
+        intent.putExtra(USER_IMAGE_EXTRA, landmark.getUserImage(0));
         intent.putExtra(LANDMARK_NAME_EXTRA, landmark.getName());
-        intent.putExtra(LANDMARK_URL_EXTRA, landmark.getImageUrl());
-        intent.putExtra(VIEWS_EXTRA, landmark.getViews());
-        intent.putExtra(LIKES_EXTRA, landmark.getLikes());
+        intent.putExtra(LANDMARK_URL_EXTRA, landmark.getImageUrl(0));
+        intent.putExtra(VIEWS_EXTRA, landmark.getViews(0));
+        intent.putExtra(LIKES_EXTRA, landmark.getLikes(0));
         intent.putExtra(EXTRA_LANDMARK_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
-
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                 getActivity(),
