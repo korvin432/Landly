@@ -1,6 +1,9 @@
 package com.mindyapps.android.landly.di;
 
 import com.mindyapps.android.landly.MainActivity;
+import com.mindyapps.android.landly.di.landmark.LandmarkModule;
+import com.mindyapps.android.landly.di.landmark.LandmarkScope;
+import com.mindyapps.android.landly.di.landmark.LandmarkViewModelsModule;
 import com.mindyapps.android.landly.di.main.MainFragmentBuildersModule;
 import com.mindyapps.android.landly.di.main.MainModule;
 import com.mindyapps.android.landly.di.main.MainScope;
@@ -20,7 +23,9 @@ public abstract class ActivityBuildersModule {
     )
     abstract MainActivity contributeMainActivity();
 
-    @ContributesAndroidInjector()
+    @LandmarkScope
+    @ContributesAndroidInjector(
+            modules = {LandmarkViewModelsModule.class, LandmarkModule.class})
     abstract LandmarkActivity contributeLandmarkActivity();
 
 }

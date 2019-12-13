@@ -12,7 +12,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import com.mindyapps.android.landly.R;
 
-public class FavouriteFragment extends Fragment {
+import dagger.android.support.DaggerFragment;
+
+public class FavouriteFragment extends DaggerFragment {
 
     private FavouriteViewModel notificationsViewModel;
 

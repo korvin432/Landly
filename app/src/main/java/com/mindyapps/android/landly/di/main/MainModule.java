@@ -46,7 +46,6 @@ public  class MainModule {
         return retrofit.create(PixabayApi.class);
     }
 
-
     @MainScope
     @Provides
     static LandmarkRepository provideLandMarksRepo(PixabayApi pixabayApi) {

@@ -3,6 +3,7 @@ package com.mindyapps.android.landly.ui.landmark;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
@@ -10,19 +11,25 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mindyapps.android.landly.R;
+import com.mindyapps.android.landly.db.LandmarkEntity;
 import com.mindyapps.android.landly.models.Landmark;
+import com.mindyapps.android.landly.repositories.LandmarkRepository;
 import com.mindyapps.android.landly.viewmodels.ViewModelProviderFactory;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -33,7 +40,6 @@ import static com.mindyapps.android.landly.util.Constants.LANDMARK_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.POSITION_EXTRA;
 
 public class LandmarkActivity extends DaggerAppCompatActivity {
-
     private TextView tvUserName, tvLikes, tvViews;
     private ImageView landmarkImage, userImage;
     private Landmark landmark;
@@ -42,10 +48,17 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
     @Inject
     RequestManager requestManager;
 
+    @Inject
+    ViewModelProviderFactory providerFactory;
+
+    private LandmarkViewModel landmarkViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landmark);
+        landmarkViewModel = ViewModelProviders.of(this, providerFactory).get(LandmarkViewModel.class);
+        subscribeObservers();
         supportPostponeEnterTransition();
 
         tvUserName = findViewById(R.id.user_name);
@@ -62,6 +75,15 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
 
         setExtras();
         bindView();
+    }
+
+    private void subscribeObservers() {
+        landmarkViewModel.getAllLandmarkEntities().observe(this, new Observer<List<LandmarkEntity>>() {
+            @Override
+            public void onChanged(List<LandmarkEntity> landmarkEntities) {
+
+            }
+        });
     }
 
     private void setExtras() {
@@ -121,5 +143,9 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
     }
 
     private void addToFavourites() {
+        LandmarkEntity landmarkEntity = new LandmarkEntity(landmark.getName(),
+                landmark.getUserImage(position), landmark.getImageUrl(position),
+                landmark.getLikes(position), landmark.getViews(position));
+        landmarkViewModel.insert(landmarkEntity);
     }
 }
