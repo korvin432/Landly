@@ -16,7 +16,6 @@ import javax.inject.Inject;
 
 public class SearchViewModel extends ViewModel {
 
-    private static final String TAG = "SearchViewModel";
     private LiveData<Landmark> landmarkMutableLiveData;
     private MutableLiveData<String> etText;
     @Inject
@@ -29,7 +28,6 @@ public class SearchViewModel extends ViewModel {
         }
         etText = new MutableLiveData<>();
         landmarkMutableLiveData = new MutableLiveData<>();
-        //getData(etText.getValue());
     }
 
     @Inject

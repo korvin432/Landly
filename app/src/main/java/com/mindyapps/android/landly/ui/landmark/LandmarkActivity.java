@@ -5,9 +5,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +31,7 @@ import static com.mindyapps.android.landly.util.Constants.EXTRA_LANDMARK_IMAGE_T
 import static com.mindyapps.android.landly.util.Constants.LANDMARK_NAME_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.LANDMARK_URL_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.LIKES_EXTRA;
+import static com.mindyapps.android.landly.util.Constants.PAGE_URL_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.USERNAME_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.USER_IMAGE_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.VIEWS_EXTRA;
@@ -34,11 +40,8 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
 
     private TextView tvUserName, tvLikes, tvViews;
     private ImageView landmarkImage, userImage;
-    private String userName, landmarkName, userImageUrl, landmarkImageUrl;
+    private String userName, landmarkName, userImageUrl, landmarkImageUrl, pageUrl;
     private int likes, views;
-
-    @Inject
-    ViewModelProviderFactory providerFactory;
 
     @Inject
     RequestManager requestManager;
@@ -114,5 +117,32 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
         landmarkImageUrl = getIntent().getStringExtra(LANDMARK_URL_EXTRA);
         likes = getIntent().getIntExtra(LIKES_EXTRA, 0);
         views = getIntent().getIntExtra(VIEWS_EXTRA, 0);
+        pageUrl = getIntent().getStringExtra(PAGE_URL_EXTRA);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.landmark_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.open_in_browser:
+                Intent pageIntent = new Intent(Intent.ACTION_VIEW);
+                pageIntent.setData(Uri.parse(pageUrl));
+                startActivity(pageIntent);
+                return true;
+            case R.id.add_to_favourites:
+                addToFavourites();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void addToFavourites() {
     }
 }

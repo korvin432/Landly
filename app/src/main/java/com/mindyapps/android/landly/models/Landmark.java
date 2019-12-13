@@ -54,12 +54,19 @@ public class Landmark {
         return name;
     }
 
+    public String getPageUrl(int i) {
+        return hitList.get(i).getPageUrl();
+    }
+
     public List<Hit> getHitList() {
         return hitList;
     }
 }
 
 class Hit{
+    @SerializedName("pageURL")
+    private String pageUrl;
+
     @SerializedName("webformatURL")
     private String imageUrl;
 
@@ -104,5 +111,9 @@ class Hit{
 
     public String getUserImage() {
         return userImage;
+    }
+
+    public String getPageUrl() {
+        return pageUrl;
     }
 }

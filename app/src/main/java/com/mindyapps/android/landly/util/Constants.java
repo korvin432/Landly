@@ -11,5 +11,6 @@ public class Constants {
     public static final String LANDMARK_URL_EXTRA = "landmarkUrl";
     public static final String VIEWS_EXTRA = "viewCount";
     public static final String LIKES_EXTRA = "likesCount";
+    public static final String PAGE_URL_EXTRA = "pageUrl";
     public static final String EXTRA_LANDMARK_IMAGE_TRANSITION_NAME = "landmarkTrans";
 }

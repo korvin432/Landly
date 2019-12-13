@@ -42,6 +42,7 @@ import static com.mindyapps.android.landly.util.Constants.EXTRA_LANDMARK_IMAGE_T
 import static com.mindyapps.android.landly.util.Constants.LANDMARK_NAME_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.LANDMARK_URL_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.LIKES_EXTRA;
+import static com.mindyapps.android.landly.util.Constants.PAGE_URL_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.USERNAME_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.USER_IMAGE_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.VIEWS_EXTRA;
@@ -129,6 +130,7 @@ public class SearchFragment extends DaggerFragment implements OnLandmarkListener
         intent.putExtra(LANDMARK_NAME_EXTRA, searchView.getQuery().toString());
         intent.putExtra(LANDMARK_URL_EXTRA, landmark.getImageUrl(position));
         intent.putExtra(VIEWS_EXTRA, landmark.getViews(position));
+        intent.putExtra(PAGE_URL_EXTRA, landmark.getPageUrl(position));
         intent.putExtra(LIKES_EXTRA, landmark.getLikes(position));
         intent.putExtra(EXTRA_LANDMARK_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
 
@@ -143,6 +145,6 @@ public class SearchFragment extends DaggerFragment implements OnLandmarkListener
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Glide.get(getContext()).clearMemory();
+        Glide.get(getActivity()).clearMemory();
     }
 }

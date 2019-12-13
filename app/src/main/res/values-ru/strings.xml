@@ -4,4 +4,6 @@
     <string name="title_search">Поиск</string>
     <string name="title_random">Случайно</string>
     <string name="title_favourite">Избранные</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="add_to_favourites">Add to favourites</string>
 </resources>
