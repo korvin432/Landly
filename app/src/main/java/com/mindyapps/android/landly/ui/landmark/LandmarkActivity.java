@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.mindyapps.android.landly.R;
+import com.mindyapps.android.landly.models.Landmark;
 import com.mindyapps.android.landly.viewmodels.ViewModelProviderFactory;
 
 import javax.inject.Inject;
@@ -28,20 +29,15 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerAppCompatActivity;
 
 import static com.mindyapps.android.landly.util.Constants.EXTRA_LANDMARK_IMAGE_TRANSITION_NAME;
-import static com.mindyapps.android.landly.util.Constants.LANDMARK_NAME_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.LANDMARK_URL_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.LIKES_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.PAGE_URL_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.USERNAME_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.USER_IMAGE_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.VIEWS_EXTRA;
+import static com.mindyapps.android.landly.util.Constants.LANDMARK_EXTRA;
+import static com.mindyapps.android.landly.util.Constants.POSITION_EXTRA;
 
 public class LandmarkActivity extends DaggerAppCompatActivity {
 
     private TextView tvUserName, tvLikes, tvViews;
     private ImageView landmarkImage, userImage;
-    private String userName, landmarkName, userImageUrl, landmarkImageUrl, pageUrl;
-    private int likes, views;
+    private Landmark landmark;
+    private int position;
 
     @Inject
     RequestManager requestManager;
@@ -58,7 +54,6 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
         landmarkImage = findViewById(R.id.landmark_image);
         userImage = findViewById(R.id.user_image);
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String imageTransitionName = getIntent().getExtras()
                     .getString(EXTRA_LANDMARK_IMAGE_TRANSITION_NAME);
@@ -69,55 +64,37 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
         bindView();
     }
 
-    private void bindView() {
-        setTitle(landmarkName);
-        tvUserName.setText(userName);
-        tvLikes.setText(String.valueOf(likes));
-        tvViews.setText(String.valueOf(views));
-
-        requestManager
-                .load(userImageUrl)
-                .fitCenter()
-                .apply(RequestOptions.circleCropTransform())
-                .error(R.color.colorPrimaryDark)
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        userImage.setImageDrawable(resource);
-                        supportStartPostponedEnterTransition();
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
-        requestManager
-                .load(landmarkImageUrl)
-                .fitCenter()
-                .error(R.color.colorPrimaryDark)
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        landmarkImage.setImageDrawable(resource);
-                        supportStartPostponedEnterTransition();
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
+    private void setExtras() {
+        landmark = getIntent().getParcelableExtra(LANDMARK_EXTRA);
+        position = getIntent().getIntExtra(POSITION_EXTRA, 0);
     }
 
-    private void setExtras() {
-        landmarkName = getIntent().getStringExtra(LANDMARK_NAME_EXTRA);
-        userName = getIntent().getStringExtra(USERNAME_EXTRA);
-        userImageUrl = getIntent().getStringExtra(USER_IMAGE_EXTRA);
-        landmarkImageUrl = getIntent().getStringExtra(LANDMARK_URL_EXTRA);
-        likes = getIntent().getIntExtra(LIKES_EXTRA, 0);
-        views = getIntent().getIntExtra(VIEWS_EXTRA, 0);
-        pageUrl = getIntent().getStringExtra(PAGE_URL_EXTRA);
+    private void bindView() {
+        setTitle(landmark.getName());
+        tvUserName.setText(landmark.getUserName(position));
+        tvLikes.setText(String.valueOf(landmark.getLikes(position)));
+        tvViews.setText(String.valueOf(landmark.getViews(position)));
+        setImage(landmark.getUserImage(position), userImage);
+        setImage(landmark.getImageUrl(position), landmarkImage);
+    }
+
+    private void setImage(String imageUrl, final ImageView imageView){
+        requestManager
+                .load(imageUrl)
+                .fitCenter()
+                .error(R.color.colorPrimaryDark)
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        imageView.setImageDrawable(resource);
+                        supportStartPostponedEnterTransition();
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
     }
 
     @Override
@@ -132,7 +109,7 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
         switch (item.getItemId()) {
             case R.id.open_in_browser:
                 Intent pageIntent = new Intent(Intent.ACTION_VIEW);
-                pageIntent.setData(Uri.parse(pageUrl));
+                pageIntent.setData(Uri.parse(landmark.getPageUrl(position)));
                 startActivity(pageIntent);
                 return true;
             case R.id.add_to_favourites:

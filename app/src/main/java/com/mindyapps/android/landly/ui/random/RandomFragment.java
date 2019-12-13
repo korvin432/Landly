@@ -29,13 +29,7 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerFragment;
 
 import static com.mindyapps.android.landly.util.Constants.EXTRA_LANDMARK_IMAGE_TRANSITION_NAME;
-import static com.mindyapps.android.landly.util.Constants.LANDMARK_NAME_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.LANDMARK_URL_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.LIKES_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.PAGE_URL_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.USERNAME_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.USER_IMAGE_EXTRA;
-import static com.mindyapps.android.landly.util.Constants.VIEWS_EXTRA;
+import static com.mindyapps.android.landly.util.Constants.LANDMARK_EXTRA;
 
 public class RandomFragment extends DaggerFragment implements OnLandmarkListener{
     private static final String TAG = "RandomFragment";
@@ -88,13 +82,7 @@ public class RandomFragment extends DaggerFragment implements OnLandmarkListener
     public void onLandmarkClick(int position, ImageView sharedImageView) {
         Landmark landmark = adapter.getSelectedLandmark(position);
         Intent intent = new Intent(getActivity(), LandmarkActivity.class);
-        intent.putExtra(USERNAME_EXTRA, landmark.getUserName(0));
-        intent.putExtra(USER_IMAGE_EXTRA, landmark.getUserImage(0));
-        intent.putExtra(LANDMARK_NAME_EXTRA, landmark.getName());
-        intent.putExtra(LANDMARK_URL_EXTRA, landmark.getImageUrl(0));
-        intent.putExtra(VIEWS_EXTRA, landmark.getViews(0));
-        intent.putExtra(LIKES_EXTRA, landmark.getLikes(0));
-        intent.putExtra(PAGE_URL_EXTRA, landmark.getPageUrl(0));
+        intent.putExtra(LANDMARK_EXTRA, landmark);
         intent.putExtra(EXTRA_LANDMARK_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(sharedImageView));
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
