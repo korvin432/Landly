@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = LandmarkEntity.class, version = 1)
+@Database(entities = LandmarkEntity.class, version = 2)
 public abstract class LandmarkDatabase extends RoomDatabase {
 
     private static LandmarkDatabase instance;

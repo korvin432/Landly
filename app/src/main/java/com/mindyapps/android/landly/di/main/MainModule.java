@@ -13,6 +13,7 @@ import com.mindyapps.android.landly.MainActivity;
 import com.mindyapps.android.landly.R;
 import com.mindyapps.android.landly.network.PixabayApi;
 import com.mindyapps.android.landly.repositories.LandmarkRepository;
+import com.mindyapps.android.landly.ui.favourite.FavouriteRecyclerAdapter;
 import com.mindyapps.android.landly.ui.random.OnLandmarkListener;
 import com.mindyapps.android.landly.ui.random.RandomFragment;
 import com.mindyapps.android.landly.ui.random.RandomRecyclerAdapter;
@@ -38,6 +39,12 @@ public  class MainModule {
     @Provides
     static SearchRecyclerAdapter provideSearchAdapter(RequestManager requestManager){
         return new SearchRecyclerAdapter(requestManager);
+    }
+
+    @MainScope
+    @Provides
+    static FavouriteRecyclerAdapter provideFavouriteAdapter(RequestManager requestManager){
+        return new FavouriteRecyclerAdapter(requestManager);
     }
 
     @MainScope

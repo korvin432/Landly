@@ -3,6 +3,7 @@ package com.mindyapps.android.landly.di.main;
 import androidx.lifecycle.ViewModel;
 
 import com.mindyapps.android.landly.di.ViewModelKey;
+import com.mindyapps.android.landly.ui.favourite.FavouriteViewModel;
 import com.mindyapps.android.landly.ui.random.RandomViewModel;
 import com.mindyapps.android.landly.ui.search.SearchViewModel;
 
@@ -23,4 +24,8 @@ public abstract class MainViewModelsModule {
     @ViewModelKey(SearchViewModel.class)
     public abstract ViewModel bindSearchViewModel(SearchViewModel viewModel);
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(FavouriteViewModel.class)
+    public abstract ViewModel bindFavouriteViewModel(FavouriteViewModel viewModel);
 }
