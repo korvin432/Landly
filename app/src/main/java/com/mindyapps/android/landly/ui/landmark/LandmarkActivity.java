@@ -61,8 +61,6 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landmark);
         landmarkViewModel = ViewModelProviders.of(this, providerFactory).get(LandmarkViewModel.class);
-        subscribeObservers();
-        supportPostponeEnterTransition();
 
         tvUserName = findViewById(R.id.user_name);
         tvLikes = findViewById(R.id.likes_count);
@@ -70,13 +68,17 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
         landmarkImage = findViewById(R.id.landmark_image);
         userImage = findViewById(R.id.user_image);
 
+        setExtras();
+        subscribeObservers();
+        supportPostponeEnterTransition();
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String imageTransitionName = getIntent().getExtras()
                     .getString(EXTRA_LANDMARK_IMAGE_TRANSITION_NAME);
             landmarkImage.setTransitionName(imageTransitionName);
         }
 
-        setExtras();
         bindView();
     }
 
@@ -84,7 +86,16 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
         landmarkViewModel.getAllLandmarkEntities().observe(this, new Observer<List<LandmarkEntity>>() {
             @Override
             public void onChanged(List<LandmarkEntity> landmarkEntities) {
-
+                int count;
+                if (landmarkEntity != null){
+                    count = landmarkViewModel.getLandmarkByUrl(landmarkEntity.getImageUrl());
+                } else {
+                    count = landmarkViewModel.getLandmarkByUrl(landmark.getImageUrl(position));
+                }
+                if (count == 1){
+                    isFavourite = true;
+                    invalidateOptionsMenu();
+                }
             }
         });
     }
@@ -156,16 +167,29 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
             case R.id.add_to_favourites:
                 addToFavourites();
                 return true;
+            case R.id.delete_landmark:
+                deleteLandmark();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void deleteLandmark() {
+        if (landmarkEntity != null){
+            landmarkViewModel.delete(landmarkEntity.getImageUrl());
+        } else {
+            landmarkViewModel.delete(landmark.getImageUrl(position));
+        }
+    }
+
     private void addToFavourites() {
-        LandmarkEntity landmarkEntity = new LandmarkEntity(
+        landmarkEntity = new LandmarkEntity(
                 landmark.getUserName(position), landmark.getName(),
                 landmark.getUserImage(position), landmark.getImageUrl(position),
                 landmark.getLikes(position), landmark.getViews(position));
         landmarkViewModel.insert(landmarkEntity);
+        isFavourite = true;
+        invalidateOptionsMenu();
     }
 }

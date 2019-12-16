@@ -11,6 +11,7 @@ import com.mindyapps.android.landly.db.LandmarkEntity;
 import com.mindyapps.android.landly.network.PixabayApi;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
@@ -31,8 +32,19 @@ public class FavouritesRepository {
         new  InsertLandmarkAsyncTask(landmarkDao).execute(landmarkEntity);
     }
 
-    public void delete(LandmarkEntity landmarkEntity){
-        new  DeleteLandmarkAsyncTask(landmarkDao).execute(landmarkEntity);
+    public void delete(String imageUrl){
+        new  DeleteLandmarkAsyncTask(landmarkDao).execute(imageUrl);
+    }
+
+    public int getLandmarkByUrl(String imageUrl){
+        try {
+            return new LandmarkByUrlAsyncTask(landmarkDao).execute(imageUrl).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public LiveData<List<LandmarkEntity>> getAllLandmarks() {
@@ -53,7 +65,7 @@ public class FavouritesRepository {
         }
     }
 
-    private static class DeleteLandmarkAsyncTask extends AsyncTask<LandmarkEntity, Void, Void> {
+    private static class DeleteLandmarkAsyncTask extends AsyncTask<String, Void, Void> {
         private LandmarkDao landmarkDao;
 
         private DeleteLandmarkAsyncTask(LandmarkDao landmarkDao){
@@ -61,9 +73,27 @@ public class FavouritesRepository {
         }
 
         @Override
-        protected Void doInBackground(LandmarkEntity... landmarkEntities) {
-            landmarkDao.delete(landmarkEntities[0]);
+        protected Void doInBackground(String... strings) {
+            landmarkDao.deleteByImageUrl(strings[0]);
             return null;
+        }
+    }
+
+    private static class LandmarkByUrlAsyncTask extends AsyncTask<String, Void, Integer> {
+        private LandmarkDao landmarkDao;
+
+        private LandmarkByUrlAsyncTask(LandmarkDao landmarkDao){
+            this.landmarkDao = landmarkDao;
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            return landmarkDao.getLandmarkByUrl(strings[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
         }
     }
 

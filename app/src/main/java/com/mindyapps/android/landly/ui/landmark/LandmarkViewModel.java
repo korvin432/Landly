@@ -33,8 +33,12 @@ public class LandmarkViewModel extends ViewModel {
         favouritesRepository.insert(landmarkEntity);
     }
 
-    public void delete(LandmarkEntity landmarkEntity){
-        favouritesRepository.delete(landmarkEntity);
+    public void delete(String imageUrl){
+        favouritesRepository.delete(imageUrl);
+    }
+
+    public int getLandmarkByUrl(String imageUrl){
+        return favouritesRepository.getLandmarkByUrl(imageUrl);
     }
 
     public LiveData<List<LandmarkEntity>> getAllLandmarkEntities() {

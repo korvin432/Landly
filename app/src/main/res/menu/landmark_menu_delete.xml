@@ -6,4 +6,9 @@
         android:id="@+id/open_in_browser"
         android:title="@string/open_in_browser"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/delete_landmark"
+        android:title="@string/delete_landmark"
+        app:showAsAction="never"/>
 </menu>

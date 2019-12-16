@@ -14,10 +14,13 @@ public interface LandmarkDao {
     @Insert
     void insert(LandmarkEntity note);
 
-    @Delete
-    void delete(LandmarkEntity note);
-
     @Query("SELECT * FROM landmark_table ORDER BY id DESC")
     LiveData<List<LandmarkEntity>> getAllLandmarks();
 
+    @Query("DELETE FROM landmark_table WHERE imageUrl = :imageUrl")
+    void deleteByImageUrl(String imageUrl);
+
+
+    @Query("SELECT COUNT(id) FROM landmark_table WHERE imageUrl = :imageUrl")
+    int getLandmarkByUrl(String imageUrl);
 }
