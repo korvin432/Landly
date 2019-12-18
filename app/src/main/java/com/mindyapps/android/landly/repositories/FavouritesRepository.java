@@ -32,13 +32,13 @@ public class FavouritesRepository {
         new  InsertLandmarkAsyncTask(landmarkDao).execute(landmarkEntity);
     }
 
-    public void delete(String imageUrl){
-        new  DeleteLandmarkAsyncTask(landmarkDao).execute(imageUrl);
+    public void delete(String pageUrl){
+        new  DeleteLandmarkAsyncTask(landmarkDao).execute(pageUrl);
     }
 
-    public int getLandmarkByUrl(String imageUrl){
+    public int getLandmarkByUrl(String pageUrl){
         try {
-            return new LandmarkByUrlAsyncTask(landmarkDao).execute(imageUrl).get();
+            return new LandmarkByUrlAsyncTask(landmarkDao).execute(pageUrl).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -74,7 +74,7 @@ public class FavouritesRepository {
 
         @Override
         protected Void doInBackground(String... strings) {
-            landmarkDao.deleteByImageUrl(strings[0]);
+            landmarkDao.deleteByPageUrl(strings[0]);
             return null;
         }
     }

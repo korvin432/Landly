@@ -17,10 +17,10 @@ public interface LandmarkDao {
     @Query("SELECT * FROM landmark_table ORDER BY id DESC")
     LiveData<List<LandmarkEntity>> getAllLandmarks();
 
-    @Query("DELETE FROM landmark_table WHERE imageUrl = :imageUrl")
-    void deleteByImageUrl(String imageUrl);
+    @Query("DELETE FROM landmark_table WHERE pageUrl = :pageUrl")
+    void deleteByPageUrl(String pageUrl);
 
 
-    @Query("SELECT COUNT(id) FROM landmark_table WHERE imageUrl = :imageUrl")
-    int getLandmarkByUrl(String imageUrl);
+    @Query("SELECT COUNT(id) FROM landmark_table WHERE pageUrl = :pageUrl")
+    int getLandmarkByUrl(String pageUrl);
 }

@@ -41,12 +41,15 @@ import static com.mindyapps.android.landly.util.Constants.LANDMARK_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.POSITION_EXTRA;
 
 public class LandmarkActivity extends DaggerAppCompatActivity {
+
+    private static final String TAG = "LandmarkActivity";
     private TextView tvUserName, tvLikes, tvViews;
     private ImageView landmarkImage, userImage;
     private Landmark landmark;
     private LandmarkEntity landmarkEntity;
     private boolean isFavourite;
     private int position;
+    private String pageUrl;
 
     @Inject
     RequestManager requestManager;
@@ -88,9 +91,9 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
             public void onChanged(List<LandmarkEntity> landmarkEntities) {
                 int count;
                 if (landmarkEntity != null){
-                    count = landmarkViewModel.getLandmarkByUrl(landmarkEntity.getImageUrl());
+                    count = landmarkViewModel.getLandmarkByUrl(landmarkEntity.getPageUrl());
                 } else {
-                    count = landmarkViewModel.getLandmarkByUrl(landmark.getImageUrl(position));
+                    count = landmarkViewModel.getLandmarkByUrl(landmark.getPageUrl(position));
                 }
                 if (count == 1){
                     isFavourite = true;
@@ -114,6 +117,7 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
             tvViews.setText(String.valueOf(landmark.getViews(position)));
             setImage(landmark.getUserImage(position), userImage);
             setImage(landmark.getImageUrl(position), landmarkImage);
+            pageUrl = landmark.getPageUrl(position);
         } else {
             isFavourite = true;
             setTitle(landmarkEntity.getLandmarkName());
@@ -122,6 +126,7 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
             tvViews.setText(String.valueOf(landmarkEntity.getViews()));
             setImage(landmarkEntity.getUserImageUrl(), userImage);
             setImage(landmarkEntity.getImageUrl(), landmarkImage);
+            pageUrl = landmarkEntity.getPageUrl();
         }
     }
 
@@ -161,7 +166,7 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
         switch (item.getItemId()) {
             case R.id.open_in_browser:
                 Intent pageIntent = new Intent(Intent.ACTION_VIEW);
-                pageIntent.setData(Uri.parse(landmark.getPageUrl(position)));
+                pageIntent.setData(Uri.parse(pageUrl));
                 startActivity(pageIntent);
                 return true;
             case R.id.add_to_favourites:
@@ -177,16 +182,16 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
 
     private void deleteLandmark() {
         if (landmarkEntity != null){
-            landmarkViewModel.delete(landmarkEntity.getImageUrl());
+            landmarkViewModel.delete(landmarkEntity.getPageUrl());
         } else {
-            landmarkViewModel.delete(landmark.getImageUrl(position));
+            landmarkViewModel.delete(landmark.getPageUrl(position));
         }
     }
 
     private void addToFavourites() {
         landmarkEntity = new LandmarkEntity(
-                landmark.getUserName(position), landmark.getName(),
-                landmark.getUserImage(position), landmark.getImageUrl(position),
+                landmark.getUserName(position), landmark.getName(), landmark.getUserImage(position),
+                landmark.getImageUrl(position), landmark.getPageUrl(position),
                 landmark.getLikes(position), landmark.getViews(position));
         landmarkViewModel.insert(landmarkEntity);
         isFavourite = true;

@@ -15,14 +15,17 @@ public class LandmarkEntity implements Parcelable {
     private String landmarkName;
     private String userImageUrl;
     private String imageUrl;
+    private String pageUrl;
     private int likes;
     private int views;
 
-    public LandmarkEntity(String userName, String landmarkName, String userImageUrl, String imageUrl, int likes, int views) {
+    public LandmarkEntity(String userName, String landmarkName, String userImageUrl,
+                          String imageUrl, String pageUrl, int likes, int views) {
         this.userName = userName;
         this.landmarkName = landmarkName;
         this.userImageUrl = userImageUrl;
         this.imageUrl = imageUrl;
+        this.pageUrl = pageUrl;
         this.likes = likes;
         this.views = views;
     }
@@ -33,6 +36,7 @@ public class LandmarkEntity implements Parcelable {
         landmarkName = in.readString();
         userImageUrl = in.readString();
         imageUrl = in.readString();
+        pageUrl = in.readString();
         likes = in.readInt();
         views = in.readInt();
     }
@@ -81,6 +85,10 @@ public class LandmarkEntity implements Parcelable {
         return landmarkName;
     }
 
+    public String getPageUrl() {
+        return pageUrl;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -93,6 +101,7 @@ public class LandmarkEntity implements Parcelable {
         dest.writeString(landmarkName);
         dest.writeString(userImageUrl);
         dest.writeString(imageUrl);
+        dest.writeString(pageUrl);
         dest.writeInt(likes);
         dest.writeInt(views);
     }
