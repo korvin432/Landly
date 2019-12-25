@@ -3,9 +3,12 @@ package com.mindyapps.android.landly.ui.landmark;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -15,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,11 +40,12 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerAppCompatActivity;
 
 import static com.mindyapps.android.landly.util.Constants.EXTRA_LANDMARK_IMAGE_TRANSITION_NAME;
+import static com.mindyapps.android.landly.util.Constants.IMAGE_URL_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.LANDMARK_ENTITY_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.LANDMARK_EXTRA;
 import static com.mindyapps.android.landly.util.Constants.POSITION_EXTRA;
 
-public class LandmarkActivity extends DaggerAppCompatActivity {
+public class LandmarkActivity extends DaggerAppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "LandmarkActivity";
     private TextView tvUserName, tvLikes, tvViews;
@@ -49,7 +54,7 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
     private LandmarkEntity landmarkEntity;
     private boolean isFavourite;
     private int position;
-    private String pageUrl;
+    private String pageUrl, imageUrl;
 
     @Inject
     RequestManager requestManager;
@@ -118,6 +123,7 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
             setImage(landmark.getUserImage(position), userImage);
             setImage(landmark.getImageUrl(position), landmarkImage);
             pageUrl = landmark.getPageUrl(position);
+            imageUrl = landmark.getImageUrl(position);
         } else {
             isFavourite = true;
             setTitle(landmarkEntity.getLandmarkName());
@@ -127,7 +133,9 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
             setImage(landmarkEntity.getUserImageUrl(), userImage);
             setImage(landmarkEntity.getImageUrl(), landmarkImage);
             pageUrl = landmarkEntity.getPageUrl();
+            imageUrl = landmarkEntity.getImageUrl();
         }
+        landmarkImage.setOnClickListener(this);
     }
 
     private void setImage(String imageUrl, final ImageView imageView) {
@@ -196,5 +204,16 @@ public class LandmarkActivity extends DaggerAppCompatActivity {
         landmarkViewModel.insert(landmarkEntity);
         isFavourite = true;
         invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.landmark_image:
+                Intent intent = new Intent(this, FullScreenActivity.class);
+                intent.putExtra(IMAGE_URL_EXTRA, imageUrl);
+                startActivity(intent);
+                break;
+        }
     }
 }

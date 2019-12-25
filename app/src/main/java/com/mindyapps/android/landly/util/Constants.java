@@ -8,5 +8,6 @@ public class Constants {
     public static final String LANDMARK_EXTRA = "landmark";
     public static final String LANDMARK_ENTITY_EXTRA = "landmarkEntity";
     public static final String POSITION_EXTRA = "position";
+    public static final String IMAGE_URL_EXTRA = "image_url";
     public static final String EXTRA_LANDMARK_IMAGE_TRANSITION_NAME = "landmarkTrans";
 }
